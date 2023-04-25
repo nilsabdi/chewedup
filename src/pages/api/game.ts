@@ -59,7 +59,7 @@ const parseTime = (line: string): number => {
   const [hours, minutes, seconds]: number[] = timeStr.split(":").map(Number);
   const dateObj: Date = new Date(year, month - 1, day, hours, minutes, seconds);
   
-  return dateObj.getTime();
+  return dateObj.getTime() / 1000;
   }
 
 const parseLine = (line: string, i: number) => {
