@@ -1,7 +1,6 @@
 import { useGameData } from "@/hooks/useGame";
 import { useTeams } from "@/hooks/useTeams";
 import clsx from "clsx";
-import { useMemo } from "react";
 import { useTime } from "./providers/TimeContext";
 
 type Props = {
@@ -30,7 +29,7 @@ const RoundWinCheck = (props: Props) => {
 const RoundWins = () => {
   const teams = useTeams();
   const { scrubToEpoch, currentFilter } = useTime();
-  const { data: roundWinData, isLoading } = useGameData({
+  const { data: roundWinData } = useGameData({
     select: (data) =>
       data.filter((event) => event.type === "GameRoundWin") as GameRoundWin[],
   });

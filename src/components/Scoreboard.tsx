@@ -84,7 +84,7 @@ const TimeComponent = () => {
   if (isLoading) return <></>; // TODO: add skeleton loader
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-4">
+    <div className="grid grid-cols-1 gap-x-8 gap-y-4">
       {Object.keys(tableData).map((teamName) => {
         return (
           <div
