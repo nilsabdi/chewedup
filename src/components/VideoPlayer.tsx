@@ -1,9 +1,8 @@
-// components/YouTubeVideo.tsx
-import React, { useEffect, useMemo, useRef } from 'react';
-import videojs, { VideoJsPlayer, VideoJsPlayerOptions } from 'video.js';
-import 'videojs-youtube';
-import 'video.js/dist/video-js.css';
-import { useTime } from './providers/TimeContext';
+import React, { useEffect, useMemo, useRef } from "react";
+import videojs, { VideoJsPlayer, VideoJsPlayerOptions } from "video.js";
+import "videojs-youtube";
+import "video.js/dist/video-js.css";
+import { useTime } from "./providers/TimeContext";
 
 type Props = {
   videoId: string;
@@ -28,7 +27,11 @@ const YouTubeVideo: React.FC<Props> = ({ videoId, options }) => {
 
     if (playerRef.current && currentTime) {
       // If the player and currentTime are more than 5 seconds apart, seek to the new time
-      if (Math.abs(playerRef.current.currentTime() - (currentTime + gameStartSeconds)) > 1) {
+      if (
+        Math.abs(
+          playerRef.current.currentTime() - (currentTime + gameStartSeconds)
+        ) > 1
+      ) {
         playerRef.current.currentTime(gameStartSeconds + currentTime);
       }
     }
@@ -36,16 +39,16 @@ const YouTubeVideo: React.FC<Props> = ({ videoId, options }) => {
 
   const defaultOptions: VideoJsPlayerOptions = useMemo(() => {
     return {
-      techOrder: ['youtube'],
+      techOrder: ["youtube"],
       fill: true,
       controls: false,
       sources: [
         {
           src: `https://www.youtube.com/watch?v=${videoId}?autoplay=false&controls=0&rel=1&iv_load_policy=3&modestbranding=1&playsInline=1&enablejsapi=1`,
-          type: 'video/youtube',
+          type: "video/youtube",
         },
       ],
-    }
+    };
   }, [videoId]);
 
   useEffect(() => {
@@ -53,12 +56,16 @@ const YouTubeVideo: React.FC<Props> = ({ videoId, options }) => {
       // The Video.js player needs to be _inside_ the component el for React 18 Strict Mode.
       const videoElement = document.createElement("video-js");
       videoRef?.current?.appendChild(videoElement);
-      const player = (playerRef.current = videojs(videoElement, {
-        ...options,
-        ...defaultOptions
-      }, () => {
-        videojs.log("player is ready");
-      }));
+      const player = (playerRef.current = videojs(
+        videoElement,
+        {
+          ...options,
+          ...defaultOptions,
+        },
+        () => {
+          videojs.log("player is ready");
+        }
+      ));
     }
   }, [options, defaultOptions]);
 
@@ -72,14 +79,7 @@ const YouTubeVideo: React.FC<Props> = ({ videoId, options }) => {
     };
   }, []);
 
-  return (
-    <div
-      className='w-full h-full'
-      data-vjs-player
-      ref={videoRef}
-    >
-    </div>
-  );
+  return <div className="w-full h-full" data-vjs-player ref={videoRef}></div>;
 };
 
 export default YouTubeVideo;
