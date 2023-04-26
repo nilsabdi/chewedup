@@ -45,11 +45,11 @@ function Thumb(props: {
       <div
         {...thumbProps}
         onMouseDown={(...args) => {
-          thumbProps.onMouseDown(...args);
+          if (thumbProps.onMouseDown) thumbProps.onMouseDown(...args);
           props.onChangeStart?.();
         }}
         onPointerDown={(...args) => {
-          thumbProps.onPointerDown(...args);
+          if (thumbProps.onPointerDown) thumbProps.onPointerDown(...args);
           props.onChangeStart?.();
         }}
         className={clsx(
@@ -93,11 +93,11 @@ export function Slider(props: any) {
       <div
         {...trackProps}
         onMouseDown={(...args) => {
-          trackProps.onMouseDown(...args);
+          if (trackProps.onMouseDown) trackProps.onMouseDown(...args);
           props.onChangeStart?.();
         }}
         onPointerDown={(...args) => {
-          trackProps.onPointerDown(...args);
+          if (trackProps.onPointerDown) trackProps.onPointerDown(...args);
           props.onChangeStart?.();
         }}
         ref={trackRef}

@@ -18,7 +18,7 @@ const TimeComponent = () => {
   const teams = useTeams();
 
   const tableData = useMemo(() => {
-    if (!allData) return null;
+    if (!allData || !teams) return null;
 
     const uniquePlayers = [
       ...new Set(allData?.map((event) => event?.player?.name || null)),
@@ -76,10 +76,10 @@ const TimeComponent = () => {
       }
       acc[teamName].push(player);
       return acc;
-    }, {});
+    }, {} as any);
 
     return groupedPlayers;
-  }, [allData, currentFilter]);
+  }, [allData, currentFilter, teams]);
 
   if (isLoading) return <></>; // TODO: add skeleton loader
 
@@ -127,7 +127,7 @@ const TimeComponent = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
-                {tableData[teamName].map((player) => {
+                {tableData[teamName].map((player: ScoreboardRow) => {
                   return (
                     <tr key={player.name}>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
