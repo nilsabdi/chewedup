@@ -5,6 +5,7 @@ interface TimeState {
   currentTime: number;
   currentFilter: number;
   isPlaying: boolean;
+  maxTime: number;
   play: () => void;
   pause: () => void;
   scrub: (time: number) => void;
@@ -37,12 +38,14 @@ const useTimeProvider = (): TimeState => {
 
   const play = () => setIsPlaying(true);
   const pause = () => setIsPlaying(false);
-  const scrub = (time: number) => setCurrentTime(time < 0 ? 0 : time);
+  const scrub = (time: number) => {
+    setCurrentTime(Math.min(Math.max(time, 0), maxTime));
+  }
   // on load, set max time to the last event
   allEvents && !maxTime && setMaxTime(allEvents[allEvents.length - 1].time - allEvents[0].time);
   const currentFilter = (allEvents && allEvents[0].time + currentTime) ?? 0;
 
-  return { currentTime, currentFilter, isPlaying, play, pause, scrub, setMaxTime };
+  return { currentTime, currentFilter, isPlaying, play, pause, scrub, setMaxTime, maxTime };
 };
 
 export const useTime = (): TimeState => {

@@ -126,4 +126,4 @@ type GameRoundWin = {
   t_score: number;
 } & Meta;
 
-type AllEvents = PlayerDropped | PlayerPickedUp | PlayerKill | PlayerKillAssist | PlayerAttack | PlayerMoneyChange | PlayerLeftBuyzone | TeamScored | TeamSide | GameRoundStart | GameRoundEnd | GameRoundWin;
+type AllEvents = PlayerDropped & PlayerPickedUp & PlayerKill & PlayerKillAssist & PlayerAttack & PlayerMoneyChange & PlayerLeftBuyzone & TeamScored & TeamSide & GameRoundStart & GameRoundEnd & GameRoundWin;
