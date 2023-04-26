@@ -10,7 +10,7 @@ type Props = {
   options?: VideoJsPlayerOptions;
 };
 
-const gameStartSeconds = 28254;
+const gameStartSeconds = 28253;
 
 const YouTubeVideo: React.FC<Props> = ({ videoId, options }) => {
   const { isPlaying, currentTime } = useTime();
@@ -28,7 +28,7 @@ const YouTubeVideo: React.FC<Props> = ({ videoId, options }) => {
 
     if (playerRef.current && currentTime) {
       // If the player and currentTime are more than 5 seconds apart, seek to the new time
-      if (Math.abs(playerRef.current.currentTime() - (currentTime + gameStartSeconds)) > 2) {
+      if (Math.abs(playerRef.current.currentTime() - (currentTime + gameStartSeconds)) > 1) {
         playerRef.current.currentTime(gameStartSeconds + currentTime);
       }
     }
