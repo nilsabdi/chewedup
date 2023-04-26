@@ -1,4 +1,5 @@
 import { useGameData } from '@/hooks/useGame';
+import { useTeams } from '@/hooks/useTeams';
 import React, { useEffect, useMemo } from 'react';
 import { useTime } from './providers/TimeContext';
 
@@ -13,22 +14,13 @@ type ScoreboardRow = {
 
 const TimeComponent = () => {
   const { currentFilter } = useTime();
-  const { data: allData, isLoading  } = useGameData({
-    
-  });
+  const { data: allData, isLoading  } = useGameData();
+  const teams = useTeams();
 
   const tableData = useMemo(() => {
     if (!allData) return null;
 
     const uniquePlayers = [...new Set(allData?.map((event) => event?.player?.name || null))].filter(n => n)
-
-    // Construct an object containing team names. This will be used to determine which team a player is on
-    const firstTeamIndex = allData.findIndex((event) => event?.type === 'TeamSide');
-    const secondTeamIndex = allData.findIndex((event, i) => event?.type === 'TeamSide' && i > firstTeamIndex);
-    const teamNames = {
-      [allData[firstTeamIndex].team]: allData[firstTeamIndex].name,
-      [allData[secondTeamIndex].team]: allData[secondTeamIndex].name,
-    }
     
     // Decorate the players with their team name
     const playersDecoratedWithTeams = uniquePlayers.map((name): ScoreboardRow => {
@@ -41,7 +33,7 @@ const TimeComponent = () => {
 
       return {
         name: name ?? 'Unknown',
-        teamName: teamNames[playerLeftBuyzone?.player?.team],
+        teamName: teams[playerLeftBuyzone?.player?.team],
         kills: playerKills.length,
         assists: playerAssists.length,
         deaths: playerDeaths.length,
@@ -64,7 +56,7 @@ const TimeComponent = () => {
   if (isLoading) return <></>; // TODO: add skeleton loader
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 p-8 gap-x-8 gap-y-4">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-4">
       {
         Object.keys(tableData).map((teamName) => {
           return (
