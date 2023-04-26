@@ -1,26 +1,116 @@
 import { useGameData } from '@/hooks/useGame';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useTime } from './providers/TimeContext';
 
-const TimeComponent: React.FC = () => {
-  const { currentTime, currentFilter, isPlaying, play, pause, scrub } = useTime();
-  const { data: kills, isLoading } = useGameData({
-    select: (data) => data.filter((event) => event.time <= currentFilter && event.type === 'PlayerKill'),
+type ScoreboardRow = {
+  name: string;
+  teamName: string;
+  kills: number;
+  headshots: number;
+  deaths: number;
+  assists: number;
+}
+
+const TimeComponent = () => {
+  const { currentFilter } = useTime();
+  const { data: allData, isLoading  } = useGameData({
+    
   });
 
-  if (isLoading) return <p>Loading...</p>;
+  const tableData = useMemo(() => {
+    if (!allData) return null;
+
+    const uniquePlayers = [...new Set(allData?.map((event) => event?.player?.name || null))].filter(n => n)
+
+    // Construct an object containing team names. This will be used to determine which team a player is on
+    const firstTeamIndex = allData.findIndex((event) => event?.type === 'TeamSide');
+    const secondTeamIndex = allData.findIndex((event, i) => event?.type === 'TeamSide' && i > firstTeamIndex);
+    const teamNames = {
+      [allData[firstTeamIndex].team]: allData[firstTeamIndex].name,
+      [allData[secondTeamIndex].team]: allData[secondTeamIndex].name,
+    }
+    
+    // Decorate the players with their team name
+    const playersDecoratedWithTeams = uniquePlayers.map((name): ScoreboardRow => {
+      const playerLeftBuyzone = allData.find((event) => event?.player?.name === name && event?.type === 'PlayerLeftBuyzone') as PlayerLeftBuyzone;
+
+      const playerKills = allData.filter((event) => currentFilter >= event.time && event?.attacker?.name === name && event?.type === 'PlayerKill')
+      const playerAssists = allData.filter((event) => currentFilter >= event.time && event?.attacker?.name === name && event?.type === 'PlayerKillAssist')
+      const playerDeaths = allData.filter((event) => currentFilter >= event.time && event?.victim?.name === name && event?.type === 'PlayerKill')
+      const playerHeadshots = allData.filter((event) => currentFilter >= event.time && event?.attacker?.name === name && event?.type === 'PlayerKill' && event?.headshot)
+
+      return {
+        name: name ?? 'Unknown',
+        teamName: teamNames[playerLeftBuyzone?.player?.team],
+        kills: playerKills.length,
+        assists: playerAssists.length,
+        deaths: playerDeaths.length,
+        headshots: playerHeadshots.length,
+      }
+    })
+    
+    const groupedPlayers = playersDecoratedWithTeams.reduce((acc, player) => {
+      const { teamName } = player;
+      if (!acc[teamName]) {
+        acc[teamName] = [];
+      }
+      acc[teamName].push(player);
+      return acc;
+    }, {});
+    
+    return groupedPlayers;
+  }, [allData, currentFilter]);
+
+  if (isLoading) return <></>; // TODO: add skeleton loader
+
   return (
-    <div>
-      <p>Current Time: {currentTime}</p>
-      <p>Current filter: {currentFilter}</p>
-      <p>Is Playing: {isPlaying ? 'Yes' : 'No'}</p>
-      <button onClick={play}>Play</button>
-      <button onClick={pause}>Pause</button>
-      <button onClick={() => scrub(currentTime - 60)}>- 60</button>
-      <button onClick={() => scrub(currentTime - 10)}>- 10</button>
-      <button onClick={() => scrub(currentTime + 10)}>+ 10</button>
-      <button onClick={() => scrub(currentTime + 60)}>+ 60</button>
-      <pre>{JSON.stringify(kills, null, 2)}</pre>
+    <div className="grid grid-cols-1 lg:grid-cols-2 p-8 gap-x-8 gap-y-4">
+      {
+        Object.keys(tableData).map((teamName) => {
+          return (
+            <div key={teamName} className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+              <table className="min-w-full divide-y divide-gray-300">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                      {teamName}
+                    </th>
+                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                      Kills
+                    </th>
+                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                      Assists
+                    </th>
+                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                      Deaths
+                    </th>
+                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                      Headshots
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 bg-white">
+                  {
+                    tableData[teamName].map((player) => {
+                      return (
+                        <tr key={player.name}>
+                          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                            {player.name}
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{player.kills}</td>
+                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{player.assists}</td>
+                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{player.deaths}</td>
+                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{player.headshots}</td>
+                        </tr>
+                      )
+                    })
+                  }
+                </tbody>
+              </table>
+            </div>
+          )
+        })
+      }
     </div>
   );
 };
