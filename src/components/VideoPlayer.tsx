@@ -10,7 +10,7 @@ type Props = {
   options?: VideoJsPlayerOptions;
 };
 
-const gameStartSeconds = 28253;
+const gameStartSeconds = 28253.5;
 
 const YouTubeVideo: React.FC<Props> = ({ videoId, options }) => {
   const { isPlaying, currentTime } = useTime();
