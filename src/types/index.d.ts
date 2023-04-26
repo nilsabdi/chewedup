@@ -1,59 +1,59 @@
-type Type = //'GameStart' | 
-// 'GameRoundFreeze' | 
-'GameRoundStart' | 
-'GameRoundEnd' | 
-'GameRoundWin' | 
-// 'GameScore' | 
-// 'GamePause' | 
-'FaceItScore' | 
-'PlayerDropped' | 
-'PlayerPickedUp' | 
-'PlayerKill' | 
-'PlayerKillAssist' | 
-'PlayerAttack' | 
-// 'PlayerThrew' | 
-// 'PlayerBlinded' | 
-'PlayerMoneyChange' | 
-// 'PlayerMoneyHas' | 
-'PlayerPurchase' | 
-'PlayerLeftBuyzone' | 
-// 'PlayerBombGot' | 
-// 'PlayerBombBeginPlant' | 
-// 'PlayerBombPlanted' | 
-// 'PlayerBombDropped' | 
-// 'PlayerBombBeginDefuse' | 
-// 'PlayerBombDefused' | 
-'TeamScored' | 
-'TeamSide';
+type Type = //'GameStart' |
+  // 'GameRoundFreeze' |
+  | "GameRoundStart"
+  | "GameRoundEnd"
+  | "GameRoundWin"
+  // 'GameScore' |
+  // 'GamePause' |
+  | "FaceItScore"
+  | "PlayerDropped"
+  | "PlayerPickedUp"
+  | "PlayerKill"
+  | "PlayerKillAssist"
+  | "PlayerAttack"
+  // 'PlayerThrew' |
+  // 'PlayerBlinded' |
+  | "PlayerMoneyChange"
+  // 'PlayerMoneyHas' |
+  | "PlayerPurchase"
+  | "PlayerLeftBuyzone"
+  // 'PlayerBombGot' |
+  // 'PlayerBombBeginPlant' |
+  // 'PlayerBombPlanted' |
+  // 'PlayerBombDropped' |
+  // 'PlayerBombBeginDefuse' |
+  // 'PlayerBombDefused' |
+  | "TeamScored"
+  | "TeamSide";
 
 type Meta = {
   time: number;
-  type: Type
-}
+  type: Type;
+};
 
 type Position = {
   x: number;
   y: number;
   z: number;
-}
+};
 
 type Player = {
   name: string;
   id: number;
   steamId: string;
   team: string;
-}
+};
 
 type Equation = {
   a: number;
   b: number;
   result: number;
-}
+};
 
 // Event types
 type PlayerDropped = {
   player: Player;
-  weapon: string; 
+  weapon: string;
 } & Meta;
 
 type PlayerPickedUp = {
@@ -112,18 +112,27 @@ type TeamSide = {
   name: string;
 } & Meta;
 
-type GameRoundStart = {
-} & Meta;
+type GameRoundStart = {} & Meta;
 
-type GameRoundEnd = {
-} & Meta;
+type GameRoundEnd = {} & Meta;
 
 type GameRoundWin = {
   team: string;
-  method: string//'win' | 'defuse' | 'bomb';
+  method: string; //'win' | 'defuse' | 'bomb';
   round: number;
   ct_score: number;
   t_score: number;
 } & Meta;
 
-type AllEvents = PlayerDropped & PlayerPickedUp & PlayerKill & PlayerKillAssist & PlayerAttack & PlayerMoneyChange & PlayerLeftBuyzone & TeamScored & TeamSide & GameRoundStart & GameRoundEnd & GameRoundWin;
+type AllEvents = PlayerDropped &
+  PlayerPickedUp &
+  PlayerKill &
+  PlayerKillAssist &
+  PlayerAttack &
+  PlayerMoneyChange &
+  PlayerLeftBuyzone &
+  TeamScored &
+  TeamSide &
+  GameRoundStart &
+  GameRoundEnd &
+  GameRoundWin;

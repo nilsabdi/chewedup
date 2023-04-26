@@ -7,13 +7,14 @@ import { Slider } from "./ControlPanel/Slider";
 import { useTime } from "./providers/TimeContext";
 
 export const ControlBar = () => {
-  const { currentTime, currentFilter, isPlaying, maxTime, play, pause, scrub } = useTime();
+  const { currentTime, currentFilter, isPlaying, maxTime, play, pause, scrub } =
+    useTime();
   const [scrubTime, setScrubTime] = useState<number | null>(currentTime);
-  const wasPlayingRef = useRef(false)
+  const wasPlayingRef = useRef(false);
 
   useEffect(() => {
-    setScrubTime(null)
-  }, [currentTime])
+    setScrubTime(null);
+  }, [currentTime]);
   return (
     <div className="fixed w-full bottom-0 flex items-center gap-6 bg-white/90 px-4 py-4 shadow shadow-slate-200/80 ring-1 ring-slate-900/5 backdrop-blur-sm md:px-6">
       <div className="flex flex-none items-center gap-4">
@@ -28,15 +29,15 @@ export const ControlBar = () => {
         value={[scrubTime ?? currentTime]}
         onChange={(v: number) => setScrubTime(v)}
         onChangeEnd={(value: number[]) => {
-          scrub(value[0])
+          scrub(value[0]);
           if (wasPlayingRef.current) {
-            play()
+            play();
           }
         }}
         numberFormatter={{ format: formatHumanTime }}
         onChangeStart={() => {
-          wasPlayingRef.current = isPlaying
-          pause()
+          wasPlayingRef.current = isPlaying;
+          pause();
         }}
       />
       {/* <p>Current Time: {currentTime}</p>
@@ -50,4 +51,4 @@ export const ControlBar = () => {
       <button onClick={() => scrub(currentTime + 60)}>+ 60</button> */}
     </div>
   );
-}
+};
