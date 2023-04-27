@@ -40,15 +40,6 @@ export const ControlBar = () => {
           pause();
         }}
       />
-      {/* <p>Current Time: {currentTime}</p>
-      <p>Current filter: {currentFilter}</p>
-      <p>Is Playing: {isPlaying ? 'Yes' : 'No'}</p>
-      <button onClick={play}>Play</button>
-      <button onClick={pause}>Pause</button>
-      <button onClick={() => scrub(currentTime - 60)}>- 60</button>
-      <button onClick={() => scrub(currentTime - 10)}>- 10</button>
-      <button onClick={() => scrub(currentTime + 10)}>+ 10</button>
-      <button onClick={() => scrub(currentTime + 60)}>+ 60</button> */}
     </div>
   );
 };
