@@ -286,11 +286,13 @@ const parseLine = (line: string, i: number) => {
     }
   }
 
-  return {
-    type: "unknown",
-    line,
-    i,
-  };
+  return null;
+
+  // return {
+  //   type: "unknown",
+  //   line,
+  //   i,
+  // };
 };
 
 export default async function handler(
@@ -310,7 +312,7 @@ export default async function handler(
   const gameLines = lines.slice(lo3Index);
 
   // Parse each line
-  const parsed = gameLines.map((line, i) => parseLine(line, i)).filter(Boolean); // Remove null lines
+  const parsed = gameLines.map((line, i) => parseLine(line, i)).filter(Boolean); // Remove null lines)
 
   res.status(200).json(parsed);
 }

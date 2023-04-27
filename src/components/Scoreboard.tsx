@@ -26,13 +26,9 @@ const Scoreboard: React.FC = () => {
 
     const uniquePlayers = [
       ...new Set(
-        allData?.map(
-          (event) =>
-            (event.type == "PlayerLeftBuyzone" && event.player.name) ||
-            "Unknown"
-        )
+        allData.filter(isPlayerLeftBuyzone).map((event) => event.player.name)
       ),
-    ].filter(Boolean);
+    ];
 
     // Decorate the players with their team name
     const playersDecoratedWithTeams = uniquePlayers.map(

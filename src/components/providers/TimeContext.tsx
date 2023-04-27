@@ -19,9 +19,9 @@ const useTimeProvider = (): TimeState => {
   const [isPlaying, setIsPlaying] = useState(false);
   const { data: allEvents } = useGameData();
 
-  const maxTime =
-    (allEvents && allEvents?.[allEvents.length - 1].time - allEvents[0].time) ??
-    0;
+  const maxTime = allEvents
+    ? allEvents[allEvents.length - 1].time - allEvents[0].time
+    : 0;
 
   useEffect(() => {
     let interval: NodeJS.Timeout | undefined;
