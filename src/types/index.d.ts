@@ -1,34 +1,5 @@
-type Type = //'GameStart' |
-  // 'GameRoundFreeze' |
-  | "GameRoundStart"
-  | "GameRoundEnd"
-  | "GameRoundWin"
-  // 'GameScore' |
-  // 'GamePause' |
-  | "FaceItScore"
-  | "PlayerDropped"
-  | "PlayerPickedUp"
-  | "PlayerKill"
-  | "PlayerKillAssist"
-  | "PlayerAttack"
-  // 'PlayerThrew' |
-  // 'PlayerBlinded' |
-  | "PlayerMoneyChange"
-  // 'PlayerMoneyHas' |
-  | "PlayerPurchase"
-  | "PlayerLeftBuyzone"
-  // 'PlayerBombGot' |
-  // 'PlayerBombBeginPlant' |
-  // 'PlayerBombPlanted' |
-  // 'PlayerBombDropped' |
-  // 'PlayerBombBeginDefuse' |
-  // 'PlayerBombDefused' |
-  | "TeamScored"
-  | "TeamSide";
-
 type Meta = {
   time: number;
-  type: Type;
 };
 
 type Position = {
@@ -52,16 +23,19 @@ type Equation = {
 
 // Event types
 type PlayerDropped = {
+  type: "PlayerDropped";
   player: Player;
   weapon: string;
 } & Meta;
 
 type PlayerPickedUp = {
+  type: "PlayerPickedUp";
   player: Player;
   weapon: string;
 } & Meta;
 
 type PlayerKill = {
+  type: "PlayerKill";
   attacker: Player;
   attackerPosition: Position;
   victim: Player;
@@ -72,12 +46,14 @@ type PlayerKill = {
 } & Meta;
 
 type PlayerKillAssist = {
+  type: "PlayerKillAssist";
   attacker: Player;
   victim: Player;
   flash: boolean;
 } & Meta;
 
 type PlayerAttack = {
+  type: "PlayerAttack";
   attacker: Player;
   attackerPosition: Position;
   victim: Player;
@@ -91,32 +67,41 @@ type PlayerAttack = {
 } & Meta;
 
 type PlayerMoneyChange = {
+  type: "PlayerMoneyChange";
   player: Player;
   equation: Equation;
   purchase?: string;
 } & Meta;
 
 type PlayerLeftBuyzone = {
+  type: "PlayerLeftBuyzone";
   player: Player;
   weapons: string[];
 } & Meta;
 
 type TeamScored = {
+  type: "TeamScored";
   team: string;
   score: number;
   players: number;
 } & Meta;
 
 type TeamSide = {
+  type: "TeamSide";
   team: string;
   name: string;
 } & Meta;
 
-type GameRoundStart = {} & Meta;
+type GameRoundStart = {
+  type: "GameRoundStart";
+} & Meta;
 
-type GameRoundEnd = {} & Meta;
+type GameRoundEnd = {
+  type: "GameRoundEnd";
+} & Meta;
 
 type GameRoundWin = {
+  type: "GameRoundWin";
   team: string;
   method: string; //'win' | 'defuse' | 'bomb';
   round: number;
@@ -124,15 +109,17 @@ type GameRoundWin = {
   t_score: number;
 } & Meta;
 
-type AllEvents = PlayerDropped &
-  PlayerPickedUp &
-  PlayerKill &
-  PlayerKillAssist &
-  PlayerAttack &
-  PlayerMoneyChange &
-  PlayerLeftBuyzone &
-  TeamScored &
-  TeamSide &
-  GameRoundStart &
-  GameRoundEnd &
-  GameRoundWin;
+// Let's use a discriminated union together with assert functions to make sure we have the correct type
+type LogEvent =
+  | PlayerDropped
+  | PlayerPickedUp
+  | PlayerKill
+  | PlayerKillAssist
+  | PlayerAttack
+  | PlayerMoneyChange
+  | PlayerLeftBuyzone
+  | TeamScored
+  | TeamSide
+  | GameRoundStart
+  | GameRoundEnd
+  | GameRoundWin;

@@ -26,7 +26,7 @@ const YouTubeVideo: React.FC<Props> = ({ videoId, options }) => {
     }
 
     if (playerRef.current && currentTime) {
-      // If the player and currentTime are more than 5 seconds apart, seek to the new time
+      // If the player and currentTime are more than 1 seconds apart, seek to the new time
       if (
         Math.abs(
           playerRef.current.currentTime() - (currentTime + gameStartSeconds)

@@ -9,7 +9,7 @@ type Props = {
   i: number;
 };
 
-const RoundWinCheck = (props: Props) => {
+const RoundWinCheck: React.FC<Props> = (props) => {
   const { event, currentTeam, i } = props;
 
   // Janky half time support
@@ -26,12 +26,15 @@ const RoundWinCheck = (props: Props) => {
   }
 };
 
+function isGameRoundWin(event: LogEvent): event is GameRoundWin {
+  return event.type === "GameRoundWin";
+}
+
 const RoundWins = () => {
   const teams = useTeams();
   const { scrubToEpoch, currentFilter } = useTime();
   const { data: roundWinData } = useGameData({
-    select: (data) =>
-      data.filter((event) => event.type === "GameRoundWin") as GameRoundWin[],
+    select: (data) => data.filter(isGameRoundWin),
   });
 
   if (!roundWinData || !teams) return <></>; // TODO: add skeleton loader

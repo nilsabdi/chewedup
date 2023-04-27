@@ -84,6 +84,7 @@ const parseTime = (line: string): number => {
 
 const parseLine = (line: string, i: number) => {
   // Test to see if line should be ignored
+
   const shouldSkip = blacklist.some((rx) => rx.test(line));
   if (shouldSkip) return null;
 
@@ -309,10 +310,7 @@ export default async function handler(
   const gameLines = lines.slice(lo3Index);
 
   // Parse each line
-  const parsed = gameLines
-    .map((line, i) => parseLine(line, i))
-    .filter((n) => n) // Remove null lines
-    .filter((line) => line?.type != "unknown"); // Remove unknown lines
+  const parsed = gameLines.map((line, i) => parseLine(line, i)).filter(Boolean); // Remove null lines
 
   res.status(200).json(parsed);
 }

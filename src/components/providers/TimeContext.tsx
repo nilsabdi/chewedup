@@ -10,7 +10,6 @@ interface TimeState {
   pause: () => void;
   scrub: (time: number) => void;
   scrubToEpoch: (time: number) => void;
-  setMaxTime: (time: number) => void;
 }
 
 const TimeContext = createContext<TimeState | null>(null);
@@ -18,8 +17,11 @@ const TimeContext = createContext<TimeState | null>(null);
 const useTimeProvider = (): TimeState => {
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [maxTime, setMaxTime] = useState(0);
   const { data: allEvents } = useGameData();
+
+  const maxTime =
+    (allEvents && allEvents?.[allEvents.length - 1].time - allEvents[0].time) ??
+    0;
 
   useEffect(() => {
     let interval: NodeJS.Timeout | undefined;
@@ -50,21 +52,17 @@ const useTimeProvider = (): TimeState => {
     setCurrentTime(time - allEvents[0].time);
   };
   // on load, set max time to the last event
-  allEvents &&
-    !maxTime &&
-    setMaxTime(allEvents[allEvents.length - 1].time - allEvents[0].time);
   const currentFilter = (allEvents && allEvents[0].time + currentTime) ?? 0;
 
   return {
     currentTime,
     currentFilter,
+    maxTime,
     isPlaying,
     play,
     pause,
     scrub,
     scrubToEpoch,
-    setMaxTime,
-    maxTime,
   };
 };
 
